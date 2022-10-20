@@ -11,14 +11,16 @@ const pusher = new Pusher({
 
 const prisma = new PrismaClient();
 
-export const findAll = async (_req, res) => {
+export const findAll = async (req, res) => {
     try {
-        const users = await prisma.user.findMany();
+        const users = await prisma.user.findMany({
+            where: { id: { not: Number(req.params.id) } },
+        });
 
         res.json({
             ok: true,
             data: users,
-        })
+        });
     } catch (error) {
         return res.status(500).json({
             ok: false,
